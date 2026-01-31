@@ -3,7 +3,7 @@ const contactsData = [
         id: 1,
         platform: "Discord",
         handle: "nihabali",
-        url: "https://discord.com",
+        url: "https://discord.com/users/your-user-id",
         icon: "discord" 
     },
     {
