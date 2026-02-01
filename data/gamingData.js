@@ -1,12 +1,28 @@
 const gamingData = [
     {
-        name: "Valorant", logo: "https://picsum.photos/seed/valo/100/100",
-        description: "Tactical 5v5 shooter.", platforms: ["PC"], genre: "FPS", rank: "Diamond 2",
-        playtime: "1200h", inGameID: "Alex#1234", server: "EU West", status: "Competitive", notes: "LF Team"
+        name: "Free Fire",
+        logo: "image/game/freefire.webp",
+        description: "10-minute Survival Shooter!",
+        platforms: ["Mobile"],
+        genre: "Battle",
+        status: "Normal",
+        playtime: "4y",
+        details: [
+            { label: "Rank", value: "Master", copy: false },
+            { label: "UID", value: "4161286300", copy: true },
+            { label: "Server", value: "BD", copy: false }
+        ]
     },
     {
-        name: "Genshin", logo: "https://picsum.photos/seed/genshin/100/100",
-        description: "Open world RPG.", platforms: ["PC", "Mobile"], genre: "ARPG", rank: "AR 60",
-        playtime: "800h", inGameID: "812093821", server: "America", status: "Casual", notes: "C6 Hu Tao"
+        name: "Gauguin",
+        logo: "image/game/gauguin.webp",
+        description: "A Sudoku-like logic game",
+        platforms: ["Mobile"],
+        genre: "Puzzle",
+        status: "Extream",
+        playtime: "2y",
+        details: [
+            { label: "Rank", value: "Hard", copy: false }
+        ]
     }
 ];
