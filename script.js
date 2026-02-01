@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(toggleBtn) toggleBtn.addEventListener('click', toggleTheme);
 });
 
-// --- Theme ---
+// --- Theme Logic ---
 function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -49,7 +49,7 @@ function updateThemeIcon(isDark) {
     if(icon) icon.textContent = isDark ? 'dark_mode' : 'light_mode';
 }
 
-// --- Loaders ---
+// --- Data Loaders ---
 function loadProfile() {
     if(typeof profileData === 'undefined') return;
     document.getElementById('header-name').textContent = profileData.name;
@@ -63,8 +63,6 @@ function loadContacts() {
     if(typeof contactsData === 'undefined') return;
     const container = document.getElementById('primary-contacts-container');
     let html = '';
-    
-    // New Style: Big Buttons
     contactsData.forEach(contact => {
         html += `
             <a href="${contact.url}" target="_blank" class="contact-action-btn ripple-surface" aria-label="${contact.platform}">
@@ -86,42 +84,95 @@ function loadSocials() {
     container.innerHTML = html;
 }
 
+// --- Copy Functionality ---
+function copyToClipboard(text, btnElement) {
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        const iconSpan = btnElement.querySelector('span');
+        const originalText = iconSpan.textContent;
+        
+        iconSpan.textContent = 'check';
+        btnElement.style.color = 'var(--md-sys-color-primary)';
+        
+        setTimeout(() => {
+            iconSpan.textContent = originalText;
+            btnElement.style.color = '';
+        }, 2000);
+    }).catch(err => console.error('Failed to copy: ', err));
+}
+
+// --- Gaming Loader (Custom Details) ---
 function loadGaming() {
     if(typeof gamingData === 'undefined') return;
     const container = document.getElementById('gaming-container');
     let html = '';
+    
     gamingData.forEach((game, index) => {
+        // Generate Status Chip
         let statusClass = 'chip-outlined';
         if(game.status === 'Active') statusClass = 'status-active';
         if(game.status === 'Casual') statusClass = 'status-casual';
         if(game.status === 'Competitive') statusClass = 'status-competitive';
+
+        // Generate Platform Chips
         const platformHtml = game.platforms.map(p => `<span class="chip chip-outlined">${p}</span>`).join('');
+
+        // Generate Details (Dynamic from 'details' array)
+        let detailsHtml = '';
+        if (game.details && Array.isArray(game.details)) {
+            detailsHtml = game.details.map((detail) => {
+                const copyBtn = detail.copy === true ? 
+                    `<button class="copy-icon-btn" onclick="copyToClipboard('${detail.value}', this)" title="Copy ${detail.label}">
+                        <span class="material-symbols-rounded">content_copy</span>
+                    </button>` : '';
+                
+                return `
+                    <div class="detail-row">
+                        <span class="detail-label">${detail.label}:</span>
+                        <div class="detail-copy-wrapper">
+                            <span class="detail-value">${detail.value}</span>
+                            ${copyBtn}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
         html += `
             <article class="game-card">
                 <div class="game-header ripple-surface" onclick="toggleGameDetails(${index})">
                     <img src="${game.logo}" class="game-logo">
                     <div class="game-info">
                         <div class="game-title">${game.name}</div>
-                        <div class="game-platforms"><span class="chip ${statusClass}">${game.status}</span>${platformHtml}</div>
+                        <div class="game-platforms">
+                            <span class="chip ${statusClass}">${game.status}</span>
+                            ${platformHtml}
+                        </div>
                     </div>
                     <span class="material-symbols-rounded toggle-icon" id="icon-${index}">expand_more</span>
                 </div>
                 <div class="game-details-wrapper" id="details-${index}">
                     <div class="game-details">
                         <div class="details-content">
-                            <p style="margin-bottom:8px; font-style:italic;">"${game.description}"</p>
-                            <div class="detail-row"><span class="detail-label">Genre:</span> <span>${game.genre}</span></div>
-                            <div class="detail-row"><span class="detail-label">Rank:</span> <span>${game.rank}</span></div>
-                            <div class="detail-row"><span class="detail-label">Playtime:</span> <span>${game.playtime}</span></div>
-                            <div class="detail-row"><span class="detail-label">ID:</span> <span>${game.inGameID}</span></div>
-                            <div class="detail-row"><span class="detail-label">Server:</span> <span>${game.server}</span></div>
-                            ${game.notes ? `<div class="detail-row"><span class="detail-label">Notes:</span> <span>${game.notes}</span></div>` : ''}
+                            <p style="margin-bottom:8px; font-style:italic; color:var(--md-sys-color-on-surface-variant);">"${game.description}"</p>
+                            <div class="detail-row"><span class="detail-label">Genre:</span> <span class="detail-value">${game.genre}</span></div>
+                            <div class="detail-row"><span class="detail-label">Playtime:</span> <span class="detail-value">${game.playtime}</span></div>
+                            ${detailsHtml}
                         </div>
                     </div>
                 </div>
             </article>`;
     });
     container.innerHTML = html;
+}
+
+// --- Gaming Toggles ---
+function toggleGamingSection() {
+    const wrapper = document.getElementById('gaming-content-wrapper');
+    const icon = document.getElementById('gaming-toggle-icon');
+    const isOpen = wrapper.classList.toggle('open');
+    icon.classList.toggle('rotated');
+    icon.textContent = isOpen ? 'expand_less' : 'expand_more';
 }
 
 function toggleGameDetails(index) {
@@ -176,7 +227,7 @@ function loadEntertainment(filter) {
     });
 }
 
-// --- Utils ---
+// --- Utilities ---
 function getIconName(platformIcon) { const map = { 'discord': 'gamepad', 'mail': 'mail' }; return map[platformIcon] || platformIcon; }
 function setupFooter() {
     document.getElementById('year').textContent = new Date().getFullYear();
