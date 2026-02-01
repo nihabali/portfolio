@@ -54,8 +54,9 @@
     --md-sys-color-outline: #938F99;
 }
 
-/* --- Global --- */
+/* --- Global Reset --- */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
 body {
     font-family: var(--font-family);
     background-color: var(--md-sys-color-background);
@@ -64,16 +65,19 @@ body {
     padding-bottom: 40px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 .container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
 .section-spacer { margin-bottom: 24px; }
 
-/* --- Ripple --- */
+/* --- Ripple Effect --- */
 .ripple-surface { position: relative; overflow: hidden; cursor: pointer; }
 span.ripple {
     position: absolute; border-radius: 50%; transform: scale(0);
-    animation: ripple 600ms linear; background-color: rgba(255, 255, 255, 0.3);
-    pointer-events: none;
+    animation: ripple 600ms linear; pointer-events: none;
+    /* Default (Dark Mode friendly) */
+    background-color: rgba(255, 255, 255, 0.3);
 }
+/* Override for Light Mode */
 [data-theme="light"] span.ripple { background-color: rgba(0, 0, 0, 0.1); }
 @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
@@ -115,7 +119,7 @@ header { position: relative; margin-bottom: 40px; }
 .icon-btn:hover { background-color: var(--md-sys-color-surface-variant); }
 .icon-btn.active { color: var(--md-sys-color-primary); background-color: var(--md-sys-color-primary-container); }
 
-/* --- Contact Hero Card --- */
+/* --- Contact Hero --- */
 .contact-hero-card {
     background-color: var(--md-sys-color-surface-variant);
     border-radius: var(--md-sys-shape-corner-large);
@@ -154,36 +158,52 @@ header { position: relative; margin-bottom: 40px; }
 .btn-tonal:hover { filter: brightness(0.95); }
 .btn-tonal span.material-symbols-rounded { font-size: 24px; margin-bottom: 4px; }
 
-/* --- Gaming --- */
-.gaming-grid { display: grid; gap: 12px; }
+/* --- Gaming Section --- */
+.gaming-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; cursor: pointer; padding-bottom: 8px; }
+.gaming-content-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease-out; margin-top: 0; }
+.gaming-content-wrapper.open { grid-template-rows: 1fr; margin-top: 16px; }
+.gaming-grid { display: grid; gap: 10px; overflow: hidden; }
+
 .game-card {
-    background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-surface-variant);
+    background: var(--md-sys-color-surface-variant); border: 1px solid var(--md-sys-color-surface-variant);
     border-radius: var(--md-sys-shape-corner-large); overflow: hidden; box-shadow: var(--md-sys-elevation-1);
 }
-.game-header { display: flex; align-items: center; padding: 12px; gap: 12px; cursor: pointer; }
-.game-logo { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; background-color: var(--md-sys-color-surface-variant); }
+.game-header { display: flex; align-items: center; padding: 10px; gap: 10px; cursor: pointer; }
+.game-logo { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background-color: var(--md-sys-color-surface); }
 .game-info { flex: 1; }
-.game-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; color: var(--md-sys-color-on-surface); }
+.game-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: var(--md-sys-color-on-surface); }
 .game-platforms { display: flex; gap: 4px; }
-.chip { display: inline-flex; align-items: center; padding: 0 10px; height: 22px; border-radius: 8px; font-size: 0.7rem; font-weight: 500; border: 1px solid transparent; }
+
+.chip { display: inline-flex; align-items: center; padding: 0 8px; height: 20px; border-radius: 6px; font-size: 0.65rem; font-weight: 500; border: 1px solid transparent; }
 .chip-outlined { border-color: var(--md-sys-color-outline); color: var(--md-sys-color-on-surface-variant); }
 
-/* Status Colors - Light Mode */
+/* Status Colors - Optimized for Dark/Light */
 .status-active { background-color: #e6f4ea; color: #1e8e3e; }
 .status-casual { background-color: #fef7e0; color: #f9ab00; }
 .status-competitive { background-color: #fce8e6; color: #c5221f; }
-
-/* Status Colors - Dark Mode (Optimized) */
 [data-theme="dark"] .status-active { background-color: #1e4620; color: #a5d6a7; }
 [data-theme="dark"] .status-casual { background-color: #6f6000; color: #fdd835; }
 [data-theme="dark"] .status-competitive { background-color: #5c2b29; color: #ff8a80; }
 
-.game-details-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease-out; background-color: var(--md-sys-color-surface-variant); }
+.game-details-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease-out; background-color: var(--md-sys-color-surface); }
 .game-details-wrapper.open { grid-template-rows: 1fr; }
 .game-details { overflow: hidden; }
 .details-content { padding: 12px; border-top: 1px solid var(--md-sys-color-outline); font-size: 0.9rem; }
-.detail-row { display: flex; margin-bottom: 6px; }
-.detail-label { font-weight: 700; width: 90px; color: var(--md-sys-color-secondary); flex-shrink: 0; }
+.detail-row { display: flex; margin-bottom: 8px; align-items: center; }
+.detail-label { font-weight: 700; width: 80px; color: var(--md-sys-color-secondary); flex-shrink: 0; }
+.detail-value { color: var(--md-sys-color-on-surface); }
+
+/* Copy Button */
+.detail-copy-wrapper { display: flex; align-items: center; gap: 4px; flex: 1; }
+.copy-icon-btn {
+    background: transparent; border: none; color: var(--md-sys-color-primary);
+    width: 24px; height: 24px; border-radius: 4px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s; padding: 0; margin-left: auto;
+}
+.copy-icon-btn:hover { background-color: var(--md-sys-color-primary-container); }
+.copy-icon-btn span { font-size: 18px; }
+
 .toggle-icon { transition: transform 0.3s ease; color: var(--md-sys-color-on-surface-variant); }
 .toggle-icon.rotated { transform: rotate(180deg); }
 
@@ -204,13 +224,37 @@ header { position: relative; margin-bottom: 40px; }
 .media-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: var(--md-sys-shape-corner-medium); background-color: var(--md-sys-color-surface-variant); box-shadow: var(--md-sys-elevation-1); }
 .media-title { font-size: 0.85rem; font-weight: 500; margin-top: 6px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--md-sys-color-on-surface); }
 
-/* List Mode */
+/* Entertainment List Mode */
 .entertainment-container.list-view .media-card { display: flex; flex-direction: row; align-items: center; background-color: var(--md-sys-color-surface-variant); border-radius: 12px; padding: 6px; height: auto; border: 1px solid var(--md-sys-color-outline); }
 .entertainment-container.list-view .media-card:hover { background-color: var(--md-sys-color-surface); transform: none; }
 .entertainment-container.list-view .media-poster { width: 40px; height: 40px; aspect-ratio: 1/1; margin-right: 10px; border-radius: 6px; box-shadow: none; }
 .entertainment-container.list-view .media-title { margin-top: 0; text-align: left; flex: 1; white-space: normal; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.9rem; }
 
-@media (max-width: 600px) {
+/* --- RESPONSIVE DESIGN (PC / Laptop) --- */
+@media (min-width: 768px) {
+    .container { max-width: 1000px; }
+    
+    header { margin-bottom: 50px; }
+    .cover-image { height: 350px; }
+    .profile-header-content { margin-top: -80px; }
+    .avatar-container { width: 150px; height: 150px; }
+    
+    .profile-name { font-size: 2.5rem; }
+    .profile-tagline { font-size: 1.2rem; }
+    
+    .social-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .contact-actions-container { flex-direction: row; justify-content: center; gap: 20px; }
+    .contact-action-btn { width: 220px; }
+    
+    .gaming-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .entertainment-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+    
+    .card { padding: 24px; }
+    .section-title { font-size: 1.3rem; }
+    .bio-text { font-size: 1.05rem; }
+}
+
+@media (max-width: 767px) {
     .profile-name { font-size: 1.4rem; }
     .card { padding: 12px; }
 }
