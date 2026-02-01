@@ -6,5 +6,6 @@ const socialLinksData = [
     { name: "Blue Sky", icon: "verified", url: "https://bsky.app/profile/nihabali.bsky.social" },
     { name: "TikTok", icon: "music_note", url: "https://www.tiktok.com/@nihab_ali" },
     { name: "Facebook", icon: "account_circle", url: "https://web.facebook.com/nihabali01" },
-    { name: "Mastodon", icon: "communities", url: "https://mastodon.social/@nihabali" }
+    { name: "Mastodon", icon: "communities", url: "https://mastodon.social/@nihabali" },
+    { name: "Telegram", icon: "forum", url: "https://t.me/nihabali01" }
 ];
